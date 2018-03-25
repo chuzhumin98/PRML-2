@@ -4,6 +4,7 @@ clear all
 mu = [0, 0, 0];
 sigma = eye(3);
 %% 接下来不断迭代EM过程，直到收敛
+count = 0; %记录共循环的次数
 while (true)
     %% E过程
     size = length(data); %总样本点个数
@@ -19,5 +20,15 @@ while (true)
     for i = 1:size
         sigma = sigma + (data(i,:)-mu)' * (data(i,:)-mu)/size;
     end
-    break;
+    count = count + 1;
+    error1 = sum(abs(mu - mu_pred));
+    error2 = sum(sum(abs(sigma - sigma_pred)));
+    % 发现结果存在震荡，于是加了一个均值动量项
+    if (count == 1000) 
+        mu = (mu+mu_pred)/2;
+        sigma = (sigma+sigma_pred)/2;
+    end
+    if (error1 + error2 < 0.01 || count >= 2000) 
+        break;
+    end
 end

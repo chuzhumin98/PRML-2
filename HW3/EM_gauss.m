@@ -3,6 +3,7 @@ clear all
 [data] = textread('data_gauss.txt');
 mu = [0, 0, 0];
 sigma = eye(3);
+Mu3 = [];
 %% 接下来不断迭代EM过程，直到收敛
 count = 0; %记录共循环的次数
 while (true)
@@ -21,6 +22,7 @@ while (true)
         sigma = sigma + (data(i,:)-mu)' * (data(i,:)-mu)/size;
     end
     count = count + 1;
+    Mu3 = [Mu3, mu(3)];
     error1 = sum(abs(mu - mu_pred));
     error2 = sum(sum(abs(sigma - sigma_pred)));
     % 发现结果存在震荡，于是加了一个均值动量项
@@ -28,10 +30,22 @@ while (true)
         mu = (mu+mu_pred)/2;
         sigma = (sigma+sigma_pred)/2;
     end
-    if (error1 + error2 < 0.01 || count >= 2000) 
+    if (error1 + error2 < 0.01 || count >= 1004) 
         break;
     end
 end
+%% 相关的数据可视化工作
+% plot(990:1030, Mu3(990:1030))
+% xlabel('迭代次数')
+% ylabel('\mu_3')
+% title('\mu_3取值随迭代次数增加的变化关系')
+% saveas(gcf, 'mu_3取值随迭代次数增加的变化关系3.png')
+% figure
+% plot(1960:2000, Mu3(1960:2000))
+% xlabel('迭代次数')
+% ylabel('\mu_3')
+% title('\mu_3取值随迭代次数增加的变化关系')
+% saveas(gcf, 'mu_3取值随迭代次数增加的变化关系4.png')
 %% 与全数据结果进行比较
 [data0] = textread('data_gauss.txt');
 mu0 = mean(data0);

@@ -32,3 +32,10 @@ while (true)
         break;
     end
 end
+%% 与全数据结果进行比较
+[data0] = textread('data_gauss.txt');
+mu0 = mean(data0);
+sigma0 = zeros(3,3);
+for i = 1:size
+    sigma0 = sigma0 + (data0(i,:)-mu)' * (data0(i,:)-mu)/size;
+end

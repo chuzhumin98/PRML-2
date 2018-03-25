@@ -24,3 +24,6 @@ while (true)
     end
 end
 %% 与全数据结果进行比较
+[data0] = textread('data_uniform.txt');
+xl0 = min(data0);
+xu0 = max(data0);

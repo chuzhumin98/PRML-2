@@ -16,9 +16,15 @@ class_1(index_1,:) = NaN;
 index_2 = find(score >= splitscore);
 class_2 = points;
 class_2(index_2,:) = NaN;
-plot(class_1(:,1),class_1(:,2),'b.','MarkerSize',6)
-hold on
-plot(class_2(:,1),class_2(:,2),'r.','MarkerSize',6)
+% plot(class_1(:,1),class_1(:,2),'b.','MarkerSize',6)
+% hold on
+% plot(class_2(:,1),class_2(:,2),'r.','MarkerSize',6)
+% xlabel('x坐标')
+% ylabel('y坐标')
+% title('随机样本点分布图')
+% legend('-1类样本点','+1类样本点','Location','NorthEastOutside')
+% saveas(gcf, 'sample.png')
+% figure
 %% 采用SSC进行分类
 iter = 0; %记录迭代的次数
 alpha = rand(3,1); %初始化参数,最后一项时常数项

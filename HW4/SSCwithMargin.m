@@ -4,6 +4,7 @@ size = 200;
 sizePerClass = 100;
 up = 10000; %随机取值的上界
 bottom = -10000; %随机取值的下界 
+gamma = 0.01; %设置阈值0.01
 points = rand(size,2)*(up-bottom)+bottom*ones(size,2); %我将随机样本范围取在[0,up]×[0,up]区间中
 A = rand(2,1)+[-0.5;-0.5]; %分别为x前的系数和y前的系数，即在这里给出原始的分类线的斜率
 score = A(1)*points(:,1)+A(2)*points(:,2);
@@ -27,8 +28,8 @@ countCorrect = 0; %计数连续判断无误的点个数
 while (true)
     k = mod(k,size)+1;
     iter = iter + 1;
-    if (label(k)*(alpha(1)*points(k,1)+alpha(2)*points(k,2)+alpha(3)) <= 0) 
-        mode = sqrt(points(k,1)*points(k,1)+points(k,2)*points(k,2)+1); %样本归一化因子
+    mode = sqrt(points(k,1)*points(k,1)+points(k,2)*points(k,2)+1); %样本归一化因子
+    if (label(k)*(alpha(1)*points(k,1)+alpha(2)*points(k,2)+alpha(3))/mode <= gamma) 
         alpha(1) = alpha(1) + label(k)*points(k,1)/mode; %更新各自的权值
         alpha(2) = alpha(2) + label(k)*points(k,2)/mode;
         alpha(3) = alpha(3) + label(k)/mode;
@@ -49,6 +50,6 @@ ylim([bottom up])
 legend('-1类样本点','+1类样本点','分界面直线','Location','NorthEastOutside')
 xlabel('x坐标')
 ylabel('y坐标')
-title('经典感知器算法解决线性可分问题')
+title(strcat('\delta=',num2str(gamma),'下margin感知器算法解决线性可分问题'))
 set(gcf,'position',[0,0,1000,1000])
-saveas(gcf, 'SSC.png')
+saveas(gcf,strcat( 'delta=',num2str(gamma),'SSCwithMargin.png'))

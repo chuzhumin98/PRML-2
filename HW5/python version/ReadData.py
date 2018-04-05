@@ -2,28 +2,28 @@ import numpy as np
 import struct
 import random
 
-# 设置一些常量的值
+# set constant varibles
 row = 28
 column = 28
-usedTrainSize = 6000
-usedTestSize = 1000
+usedTrainSize = 10000
+usedTestSize = 500
 
 def importData():
     trainSize = 60000
     testSize = 10000
-    # 给出各文件的路径
+    #set files' path
     trainimagepath = "input/train_images"
     trainlabelpath = "input/train_labels"
     testimagepath = "input/test_images"
     testlabelpath = "input/test_labels"
 
-    # 申明一些数据结构
+    # state for data structure
     trainImage = []
     trainLabel = []
     testImage = []
     testLabel = []
 
-    # 读入训练样本
+    # read for train images
     f = open(trainimagepath, 'rb')
     string = f.read()
     print('train image file size:', len(string))
@@ -45,7 +45,7 @@ def importData():
         if ((i + 1) % 10000 == 0):
             print("has read ", (i + 1), " images in train file")
 
-    # 读入训练标签
+    # read for train labels
     f = open(trainlabelpath, 'rb')
     string = f.read()
     print('train label file size:', len(string))
@@ -57,7 +57,7 @@ def importData():
 
    # print(trainLabel)
 
-    # 读入测试样本
+    # read for test images
     f = open(testimagepath, 'rb')
     string = f.read()
     print('test image file size:', len(string))
@@ -79,7 +79,7 @@ def importData():
         if ((i + 1) % 10000 == 0):
             print("has read ", (i + 1), " images in test file")
 
-    # 读入测试标签
+    # read for test labels
     f = open(testlabelpath, 'rb')
     string = f.read()
     print('test label file size:', len(string))
@@ -89,7 +89,7 @@ def importData():
         index += 1
         testLabel.append(label)
 
-    # 对训练集和测试集进行打乱
+    # shuffle for train set and test set
     train = []
     for i in range(trainSize):
         train.append([trainImage[i],trainLabel[i]])
@@ -100,13 +100,13 @@ def importData():
         test.append([testImage[i], testLabel[i]])
     random.shuffle(test)
 
-    # 需要在kNN中使用的量
+    # set for KNN request variable
     usedTrainImage = []
     usedTestImage = []
     usedTrainLabel = []
     usedTestLabel = []
 
-    # 将这些量进行赋值
+    # set the value for varibles
     for i in range(usedTrainSize):
         usedTrainImage.append(train[i][0])
         usedTrainLabel.append(train[i][1])

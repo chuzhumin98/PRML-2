@@ -1,13 +1,16 @@
 import numpy as np
 import struct
+import random
 
 # 设置一些常量的值
-trainSize = 60000
-testSize = 10000
 row = 28
 column = 28
+usedTrainSize = 6000
+usedTestSize = 1000
 
 def importData():
+    trainSize = 60000
+    testSize = 10000
     # 给出各文件的路径
     trainimagepath = "input/train_images"
     trainlabelpath = "input/train_labels"
@@ -86,5 +89,32 @@ def importData():
         index += 1
         testLabel.append(label)
 
-    #print(testLabel)
-    return [np.array(trainImage), np.array(trainLabel), np.array(testImage), np.array(testLabel)]
+    # 对训练集和测试集进行打乱
+    train = []
+    for i in range(trainSize):
+        train.append([trainImage[i],trainLabel[i]])
+    random.shuffle(train)
+
+    test = []
+    for i in range(testSize):
+        test.append([testImage[i], testLabel[i]])
+    random.shuffle(test)
+
+    # 需要在kNN中使用的量
+    usedTrainImage = []
+    usedTestImage = []
+    usedTrainLabel = []
+    usedTestLabel = []
+
+    # 将这些量进行赋值
+    for i in range(usedTrainSize):
+        usedTrainImage.append(train[i][0])
+        usedTrainLabel.append(train[i][1])
+
+    for i in range(usedTestSize):
+        usedTestImage.append(test[i][0])
+        usedTestLabel.append(test[i][1])
+
+    print(usedTrainLabel)
+
+    return [np.array(usedTrainImage), np.array(usedTrainLabel), np.array(usedTestImage), np.array(usedTestLabel)]

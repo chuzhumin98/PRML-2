@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ReadData {
-	public float[][][] images; //存储图像
+	public double[][][] images; //存储图像
 	public int[] labels; //存储标签
 	public static final String trainImages = "input/train_images";
 	public static final String testImages = "input/test_images";
@@ -31,11 +31,11 @@ public class ReadData {
 			this.size = input.readInt();
 			this.row = input.readInt();
 			this.column = input.readInt();
-			this.images = new float [this.size][this.row][this.column];
+			this.images = new double [this.size][this.row][this.column];
 			for (int i = 0; i < this.size; i++) {
 				for (int j = 0; j < this.row; j++) {
 					for (int k = 0; k < this.column; k++) {
-						this.images[i][j][k] = (float)(input.readUnsignedByte());
+						this.images[i][j][k] = (double)(input.readUnsignedByte());
 					}
 				}
 				if ((i+1)%10000 == 0) {

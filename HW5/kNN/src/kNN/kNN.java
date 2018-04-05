@@ -14,8 +14,17 @@ public class kNN {
 		this.testSet.readData(false);
 	}
 	
+
+	
+	
 	public static void main(String[] args) {
 		kNN knn = new kNN();
-		
+		System.out.println(Double.MAX_VALUE);
+		System.out.println(Distance.distanceNorm(knn.trainSet.images[0], knn.testSet.images[0], 1));
+		System.out.println(Distance.distanceNorm(knn.trainSet.images[0], knn.testSet.images[0], 2));
+		System.out.println(Distance.distanceNorm(knn.trainSet.images[0], knn.testSet.images[0], 3));
+		System.out.println(Distance.distanceNorm(knn.trainSet.images[0], knn.testSet.images[0], 19));
+		System.out.println(Distance.distanceNorm(knn.trainSet.images[0], knn.testSet.images[0], 100));
+		System.out.println(Distance.distanceChebychev(knn.trainSet.images[0], knn.testSet.images[0]));
 	}
 }

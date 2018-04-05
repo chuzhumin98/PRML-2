@@ -115,6 +115,6 @@ def importData():
         usedTestImage.append(test[i][0])
         usedTestLabel.append(test[i][1])
 
-    print(usedTrainLabel)
+    #print(usedTrainLabel)
 
     return [np.array(usedTrainImage), np.array(usedTrainLabel), np.array(usedTestImage), np.array(usedTestLabel)]

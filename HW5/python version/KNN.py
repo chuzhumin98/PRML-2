@@ -2,6 +2,9 @@ from ReadData import *
 import time
 import sys
 
+# import data
+[trainImage, trainLabel, testImage, testLabel] = importData()
+
 # for every test image calculate its k-norm distance to train set
 def distance(train, image, p):
     test = np.tile(image, (len(train), 1, 1))
@@ -14,15 +17,15 @@ def distance(train, image, p):
         return np.max(np.abs(delta), axis=(1,2))
 
 # MNN function
-def doMNN(trainSize):
+def doMNN(p,trainSize=10000):
     # import data
-    [trainImage, trainLabel, testImage, testLabel] = importData(trainSize)
+    #[trainImage, trainLabel, testImage, testLabel] = importData(trainSize)
 
     # MNN
     time1 = time.time()
     count = 0
     for i in range(usedTestSize):
-        dist = distance(trainImage, testImage[i], 2)
+        dist = distance(trainImage, testImage[i], p)
         nearest = np.argmin(dist)
         if (trainLabel[nearest] == testLabel[i]):
             count += 1
@@ -37,7 +40,7 @@ def doMNN(trainSize):
 # kNN function [slove for one k value]
 def doKNN(k):
     # import data
-    [trainImage, trainLabel, testImage, testLabel] = importData()
+    #[trainImage, trainLabel, testImage, testLabel] = importData()
 
     # KNN
     time1 = time.time()

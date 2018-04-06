@@ -45,16 +45,19 @@ def translation(imageSet):
         if ((i+1) % 100 == 0):
             print("has translate ",(i+1),' images, its rowavg:',rowavg,'columavg:',columnavg)
         translateImageSet.append(imagetranslate)
-        return translateImageSet
+    return translateImageSet
 
 
 def writeTranslateImage(imageSet, imagelabel, filePath):
     file = open(filePath, 'wb')
     np.save(file, imageSet)
     np.save(file, imagelabel)
+    file.close()
 
 # import data
 [trainImage, trainLabel, testImage, testLabel] = KNN.importData()
 translateTest = translation(testImage)
 writeTranslateImage(translateTest, testLabel, 'output/test_translate.npy')
+translateTrain = translation(trainImage)
+writeTranslateImage(translateTrain, trainLabel, 'output/train_translate.npy')
 

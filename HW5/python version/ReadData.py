@@ -5,7 +5,7 @@ import random
 # set constant varibles
 row = 28
 column = 28
-usedTestSize = 500
+usedTestSize = 10000
 
 def importData(usedTrainSize = 10000):
     trainSize = 60000

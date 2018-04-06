@@ -3,7 +3,7 @@ import time
 import sys
 
 # import data
-[trainImage, trainLabel, testImage, testLabel] = importData()
+#[trainImage, trainLabel, testImage, testLabel] = importData()
 
 # for every test image calculate its k-norm distance to train set
 def distance(train, image, p):
@@ -40,7 +40,7 @@ def doMNN(p,trainSize=10000):
 # kNN function [slove for one k value]
 def doKNN(k):
     # import data
-    #[trainImage, trainLabel, testImage, testLabel] = importData()
+    [trainImage, trainLabel, testImage, testLabel] = importData()
 
     # KNN
     time1 = time.time()
@@ -61,3 +61,4 @@ def doKNN(k):
     print("has used time ", (time2 - time1), "s in MNN testing")
     print("has corrected ", count, "/", usedTestSize, ",accuracy = ", count / usedTestSize)
     return [(time2 - time1), count / usedTestSize]
+

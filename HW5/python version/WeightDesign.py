@@ -2,6 +2,8 @@ from KNN import *
 import time
 import xlwt
 
+[trainImage, trainLabel, testImage, testLabel] = importData()
+
 def getScore():
     # init the variable
     imageGroupByLabel = []

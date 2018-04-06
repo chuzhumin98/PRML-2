@@ -5,18 +5,21 @@ import random
 import xlwt
 import math
 
+
 # MNN function, add for data load in
-def doMNN(p,trainImage, trainLabel, testImage, testLabel):
+def doMNN(p,trainImage, trainLabel, testImage, testLabel, distanceMethod=0):
     # MNN
     time1 = time.time()
     count = 0
     for i in range(len(testImage)):
-        dist = KNN.distance(trainImage, testImage[i], p)
+        if (distanceMethod == 0):
+            dist = KNN.distance(trainImage, testImage[i], p)
+        else:
+            dist = tangentDistance(trainImage, testImage[i], p)
         nearest = np.argmin(dist)
         if (trainLabel[nearest] == testLabel[i]):
             count += 1
-        if ((i+1)%10 == 0):
-            print(i, ':', trainLabel[nearest], "-", testLabel[i],'with train size=',len(trainImage))
+        print(i, ':', trainLabel[nearest], "-", testLabel[i],'with train size=',len(trainImage),'now ',count,'/',(i+1))
     time2 = time.time()
     print("has used time ", (time2 - time1), "s in MNN testing")
     print("has corrected ", count, "/", len(testImage), ",accuracy = ", count / len(testImage))
@@ -119,12 +122,46 @@ def columnTransfer(images, alpha):
 
 
 # calcaulate two images' tangent distance
-def tangentDistance(image1, image2, p):
-    rowsum1 = np.sum(image1, axis=0)
-    rowsum2 = np.sum(image1, axis=0)
+def tangentDistanceEachPair(image1, image2, p):
+    rowvar1 = np.var(np.sum(image1, axis=0))
+    rowvar2 = np.var(np.sum(image2, axis=0))
+    columnvar1 = np.var(np.sum(image1, axis=1))
+    columnvar2 = np.var(np.sum(image2, axis=1))
+    # do row and column transfer
+    if (rowvar1 > rowvar2):
+        alpha = math.sqrt(rowvar1/rowvar2)
+        image2_1 = rowTransfer(image2, alpha)
+        image1_1 = image1
+    else:
+        alpha = math.sqrt(rowvar2/rowvar1)
+        image1_1 = rowTransfer(image1, alpha)
+        image2_1 = image2
+    if (columnvar1 > columnvar2):
+        alpha = math.sqrt(columnvar1/columnvar2)
+        image2_2 = columnTransfer(image2_1, alpha)
+        image1_2 = image1_1
+    else:
+        alpha = math.sqrt(columnvar2/columnvar1)
+        image1_2 = columnTransfer(image1_1, alpha)
+        image2_2 = image2_1
+    delta = image2_2 - image1_2
+    if (p <= 150):
+        delta = delta**p
+        sums = np.sum(np.abs(delta))
+        return sums**(1.0/p)
+    else:
+        return np.max(np.abs(delta))
 
 
 
-[trainImage, trainLabel, testImage, testLabel] = sampleDataset()
-print(columnTransfer(trainImage[0], 3.0))
+def tangentDistance(train, image, p):
+    distarray = []
+    for i in range(len(train)):
+        distarray.append(tangentDistanceEachPair(train[i], image, p))
+    #print(distarray)
+    return distarray
+
+
+[trainImage, trainLabel, testImage, testLabel] = sampleDataset(5000, 500)
+doMNN(2, trainImage, trainLabel, testImage, testLabel, 1)
 

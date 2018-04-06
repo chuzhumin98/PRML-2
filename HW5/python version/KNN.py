@@ -19,7 +19,7 @@ def distance(train, image, p):
 # MNN function
 def doMNN(p,trainSize=10000):
     # import data
-    #[trainImage, trainLabel, testImage, testLabel] = importData(trainSize)
+    [trainImage, trainLabel, testImage, testLabel] = importData(trainSize)
 
     # MNN
     time1 = time.time()

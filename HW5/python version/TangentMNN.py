@@ -144,7 +144,17 @@ def tangentDistanceEachPair(image1, image2, p):
         alpha = math.sqrt(columnvar2/columnvar1)
         image1_2 = columnTransfer(image1_1, alpha)
         image2_2 = image2_1
-    delta = image2_2 - image1_2
+    total1 = np.sum(image1_2, axis=(0,1))
+    total2 = np.sum(image2_2, axis=(0,1))
+    if (total1 > total2):
+        k = total1 / total2
+        image2_3 = np.multiply(image2_2, k)
+        image1_3 = image1_2
+    else:
+        k = total2 / total1
+        image1_3 = np.multiply(image1_2, k)
+        image2_3 = image2_2
+    delta = image2_3 - image1_3
     if (p <= 150):
         delta = delta**p
         sums = np.sum(np.abs(delta))
@@ -162,6 +172,6 @@ def tangentDistance(train, image, p):
     return distarray
 
 
-[trainImage, trainLabel, testImage, testLabel] = sampleDataset(5000, 500)
+[trainImage, trainLabel, testImage, testLabel] = sampleDataset(10000, 200)
 doMNN(2, trainImage, trainLabel, testImage, testLabel, 1)
 

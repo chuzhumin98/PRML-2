@@ -5,9 +5,9 @@ import random
 # set constant varibles
 row = 28
 column = 28
-usedTestSize = 10000
+usedTestSize = 500
 
-def importData(usedTrainSize = 60000):
+def importData(usedTrainSize = 10000):
     trainSize = 60000
     testSize = 10000
     #set files' path

@@ -3,6 +3,7 @@ import numpy as np
 import time
 import random
 import xlwt
+import math
 
 # MNN function, add for data load in
 def doMNN(p,trainImage, trainLabel, testImage, testLabel):
@@ -84,5 +85,46 @@ def evaluaeTranslateTrainSize():
 
     book.save("output/MNN_translate_trainSize.xlsx")
 
-evaluaeTranslateTrainSize()
+# transfer row length with parameter alpha
+def rowTransfer(image, alpha):
+    transformImage = np.tile(0, (KNN.row, KNN.column))
+    base = 13.5 #the center base point
+    for i in range(KNN.row):
+        middle = (i - base)*alpha + base
+        low = math.floor(middle)
+        high = math.ceil(middle)
+        plow = high-middle
+        if (low >= 0 and low < KNN.row):
+            transformImage[low] = np.add(transformImage[low], np.multiply(image[i], plow))
+        if (high >= 0 and high < KNN.row):
+            transformImage[high] = np.add(transformImage[high], np.multiply(image[i], 1-plow))
+    return transformImage
+
+
+# transfer column length with parameter alpha
+def columnTransfer(images, alpha):
+    transformImage = np.tile(0, (KNN.row, KNN.column))
+    image = np.transpose(images)
+    base = 13.5 #the center base point
+    for i in range(KNN.column):
+        middle = (i - base)*alpha + base
+        low = math.floor(middle)
+        high = math.ceil(middle)
+        plow = high-middle
+        if (low >= 0 and low < KNN.column):
+            transformImage[low] = np.add(transformImage[low], np.multiply(image[i], plow))
+        if (high >= 0 and high < KNN.column):
+            transformImage[high] = np.add(transformImage[high], np.multiply(image[i], 1-plow))
+    return np.transpose(transformImage)
+
+
+# calcaulate two images' tangent distance
+def tangentDistance(image1, image2, p):
+    rowsum1 = np.sum(image1, axis=0)
+    rowsum2 = np.sum(image1, axis=0)
+
+
+
+[trainImage, trainLabel, testImage, testLabel] = sampleDataset()
+print(columnTransfer(trainImage[0], 3.0))
 

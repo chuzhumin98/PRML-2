@@ -2,7 +2,7 @@ import KNN
 import numpy as np
 import time
 import random
-import math
+import xlwt
 
 # MNN function, add for data load in
 def doMNN(p,trainImage, trainLabel, testImage, testLabel):
@@ -21,16 +21,68 @@ def doMNN(p,trainImage, trainLabel, testImage, testLabel):
     print("has corrected ", count, "/", len(testImage), ",accuracy = ", count / len(testImage))
     return [(time2-time1), count/len(testImage)]
 
-# load the data
-filetest = open("output/test_translate.npy", "rb")
-testImage = np.load(filetest)
-testLabel = np.load(filetest)
 
-filetrain = open("output/train_translate.npy", "rb")
-trainImage = np.load(filetrain)
-trainLabel = np.load(filetrain)
+# sample for translational data
+def sampleDataset(usedTrainSize=10000, usedTestSize=500):
+    # load the data
+    filetest = open("output/test_translate.npy", "rb")
+    testImage = np.load(filetest)
+    testLabel = np.load(filetest)
 
-indexMax = max(math.floor(random.random()*len(testImage)), 500)
-mytestImage = testImage[indexMax-500:indexMax]
-mytestLabel = testLabel[indexMax-500:indexMax]
-doMNN(2, trainImage, trainLabel, mytestImage, mytestLabel)
+    filetrain = open("output/train_translate.npy", "rb")
+    trainImage = np.load(filetrain)
+    trainLabel = np.load(filetrain)
+
+    # shuffle for train set and test set
+    train = []
+    for i in range(len(trainImage)):
+        train.append([trainImage[i], trainLabel[i]])
+    random.shuffle(train)
+
+    test = []
+    for i in range(len(testImage)):
+        test.append([testImage[i], testLabel[i]])
+    random.shuffle(test)
+
+    # set for KNN request variable
+    usedTrainImage = []
+    usedTestImage = []
+    usedTrainLabel = []
+    usedTestLabel = []
+
+    # set the value for varibles
+    for i in range(usedTrainSize):
+        usedTrainImage.append(train[i][0])
+        usedTrainLabel.append(train[i][1])
+
+    for i in range(usedTestSize):
+        usedTestImage.append(test[i][0])
+        usedTestLabel.append(test[i][1])
+
+    # print(usedTrainLabel)
+
+    return [np.array(usedTrainImage), np.array(usedTrainLabel), np.array(usedTestImage),
+            np.array(usedTestLabel)]
+
+
+# evaluate MNN along different train size
+def evaluaeTranslateTrainSize():
+    trainSizeSet = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 60000]
+    evaluate = []
+    for i in range(len(trainSizeSet)):
+        [trainImage, trainLabel, testImage, testLabel] = sampleDataset(usedTrainSize=trainSizeSet[i])
+        sample = doMNN(2, trainImage, trainLabel, testImage, testLabel)
+        evaluate.append(sample)
+
+    print(evaluate)
+    book = xlwt.Workbook(encoding='utf-8', style_compression=0)
+    sheet = book.add_sheet('MNN', cell_overwrite_ok=True)
+    for i in range(len(evaluate)):
+        sheet.write(i, 0, trainSizeSet[i])
+        sheet.write(i, 1, evaluate[i][0])
+        sheet.write(i, 2, evaluate[i][1])
+
+    book.save("output/MNN_translate_trainSize.xlsx")
+
+evaluaeTranslateTrainSize()
+

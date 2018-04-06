@@ -61,4 +61,4 @@ def evaluaeDistanceNormP():
     book.save("output/MNN_NormP.xlsx")
 
 
-evaluateKValue()
+evaluaeDistanceNormP()

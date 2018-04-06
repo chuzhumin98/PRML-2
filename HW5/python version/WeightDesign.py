@@ -11,10 +11,13 @@ for i in range(10):
 for i in range(len(trainImage)):
     imageGroupByLabel[trainLabel[i]].append(trainImage[i])
 
-# each group's image number
+# each group's image number/totalLen
 imageLength = []
+imageLengthMatrix = []
 for i in range(10):
-    imageLength.append(len(imageGroupByLabel[i])/len(trainImage))
+    prob = len(imageGroupByLabel[i])/len(trainImage)
+    imageLength.append(prob)
+    imageLengthMatrix.append(np.tile(prob, [row, column]))
 
 # image mean of each group
 imageMean = []
@@ -27,4 +30,9 @@ for i in range(10):
     imageVar.append(np.var(imageGroupByLabel[i],axis=0))
 
 varBetweenClass = np.var(imageMean, axis=0)
-print(varBetweenClass)
+
+vares = np.multiply(imageVar, imageLengthMatrix)
+varInClass = np.sum(vares, axis=0)+np.tile(0.00001, (row, column))
+
+score = np.divide(varBetweenClass, varInClass)
+print(score)

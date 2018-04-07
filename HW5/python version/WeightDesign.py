@@ -130,7 +130,7 @@ def evaluaeWeightModel(score):
         sheet.write(i, 3, evaluate[i][2])
         sheet.write(i, 4, evaluate[i][3])
 
-    book.save("output/MNN_weightModel.xlsx")
+    book.save("output/MNN_weightModel.xls")
 
 score = getScore()
 evaluaeWeightModel(score)

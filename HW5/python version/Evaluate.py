@@ -17,7 +17,7 @@ def evaluaeTrainSize():
         sheet.write(i, 1, evaluate[i][0])
         sheet.write(i, 2, evaluate[i][1])
 
-    book.save("output/MNN_trainSize.xlsx")
+    book.save("output/MNN_trainSize.xls")
 
 
 # evaluate KNN with different k value
@@ -39,7 +39,7 @@ def evaluateKValue():
         sheet.write(i, 1, evaluate[i][0])
         sheet.write(i, 2, evaluate[i][1])
 
-    book.save("output/KNN_KValue.xlsx")
+    book.save("output/KNN_KValue.xls")
 
 
 # evulate MNN along different distance standard
@@ -58,7 +58,7 @@ def evaluaeDistanceNormP():
         sheet.write(i, 1, evaluate[i][0])
         sheet.write(i, 2, evaluate[i][1])
 
-    book.save("output/MNN_NormP.xlsx")
+    book.save("output/MNN_NormP.xls")
 
 
 evaluaeDistanceNormP()

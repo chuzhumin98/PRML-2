@@ -34,9 +34,7 @@ def importData(usedTrainSize = 10000):
             [onerow[0], onerow[1], onerow[2], onerow[3], onerow[4], onerow[5], onerow[6],
              onerow[7], onerow[8], onerow[9], onerow[10], onerow[11], onerow[12], onerow[13],
              onerow[14], onerow[15], onerow[16], onerow[17], onerow[18], onerow[19], onerow[20],
-             onerow[21], onerow[22], onerow[23], onerow[24], onerow[25], onerow[26], onerow[27]] = struct.unpack('28B',
-                                                                                                                 string[
-                                                                                                                 index:index + 28])
+             onerow[21], onerow[22], onerow[23], onerow[24], onerow[25], onerow[26], onerow[27]] = struct.unpack('28B',string[index:index + 28])
             index += 28
             oneimage.append(onerow)
         imagematrix = np.mat(oneimage)
@@ -68,9 +66,7 @@ def importData(usedTrainSize = 10000):
             [onerow[0], onerow[1], onerow[2], onerow[3], onerow[4], onerow[5], onerow[6],
              onerow[7], onerow[8], onerow[9], onerow[10], onerow[11], onerow[12], onerow[13],
              onerow[14], onerow[15], onerow[16], onerow[17], onerow[18], onerow[19], onerow[20],
-             onerow[21], onerow[22], onerow[23], onerow[24], onerow[25], onerow[26], onerow[27]] = struct.unpack('28B',
-                                                                                                                 string[
-                                                                                                                 index:index + 28])
+             onerow[21], onerow[22], onerow[23], onerow[24], onerow[25], onerow[26], onerow[27]] = struct.unpack('28B',string[index:index + 28])
             index += 28
             oneimage.append(onerow)
         imagematrix = np.mat(oneimage)

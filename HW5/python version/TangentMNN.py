@@ -19,7 +19,9 @@ def doMNN(p,trainImage, trainLabel, testImage, testLabel, distanceMethod=0):
         nearest = np.argmin(dist)
         if (trainLabel[nearest] == testLabel[i]):
             count += 1
-        print(i, ':', trainLabel[nearest], "-", testLabel[i],'with train size=',len(trainImage),'now ',count,'/',(i+1))
+        if ((i+1)%10 == 0):
+            print(i, ':', trainLabel[nearest], "-", testLabel[i], 'with train size=', len(trainImage), 'now ', count,
+                  '/', (i + 1))
     time2 = time.time()
     print("has used time ", (time2 - time1), "s in MNN testing")
     print("has corrected ", count, "/", len(testImage), ",accuracy = ", count / len(testImage))
@@ -86,7 +88,7 @@ def evaluaeTranslateTrainSize():
         sheet.write(i, 1, evaluate[i][0])
         sheet.write(i, 2, evaluate[i][1])
 
-    book.save("output/MNN_translate_trainSize.xlsx")
+    book.save("output/MNN_translate_trainSize.xls")
 
 # transfer row length with parameter alpha
 def rowTransfer(image, alpha):

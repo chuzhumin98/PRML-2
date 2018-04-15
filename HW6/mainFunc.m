@@ -2,9 +2,9 @@ clear; clc;
 load least_sq.mat;
 
 %% Step 1: Data preprocessing
-dataTrain = train_small; % select the training data
-% train = train_mid;
-% train = train_large;
+%dataTrain = train_small; % select the training data
+%dataTrain = train_mid;
+dataTrain = train_large;
 
 X = dataTrain.X;
 y = dataTrain.y;

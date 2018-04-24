@@ -117,7 +117,7 @@ def SplitNode(samplesUnderThisNode, samplesLabels, thershod, thershodImpure, met
 #    参数therthod：停止分支的信息增益阈值
 #    参数therthodImpure：初始不纯度的停止分支阈值
 #    参数method：所使用的计算不纯度的方法，1为熵度量，2为错分度量，其他为Gini系数（default）
-def GenerateTree(treeRoot, samples, samplesLabels, thershod=0.01, therthodImpure=0.2, method=0):
+def GenerateTree(treeRoot, samples, samplesLabels, thershod=0.05, therthodImpure=0.2, method=0):
     splitResults = SplitNode(samples, samplesLabels, thershod, method)
     treeRoot.results = getLabel(samplesLabels) #获得该节点的分类结果
     if (splitResults == None): #到达叶子节点即该分支生成完毕

@@ -3,7 +3,9 @@ import math
 
 labeltypes = 9 #总的样本类型的个数
 
-totalLeafCount = 0 #记录分配到叶子的总节点数
+totalLeafCount = 0 #记录分配到叶子的总样本点个数
+totalLeafNum = 0 #生长完成后的叶节点个数
+totalPruningNum = 0 #剪枝的个数
 
 # 决策树中的节点
 class treeNode:
@@ -71,7 +73,9 @@ def SelectFeature(samplesUnderThisNode, samplesLabels, thershod, thershodImpure,
     predScore = Impurity(samplesLabels, method) #初始的不纯度
     if (predScore < thershodImpure):
         global totalLeafCount
+        global totalLeafNum
         totalLeafCount += len(samplesLabels)
+        totalLeafNum += 1
         print('arrived leaf node with sample num ',len(samplesLabels),' with leaf count ',totalLeafCount)
         return -1
     gains = [] #信息增益程度
@@ -84,7 +88,9 @@ def SelectFeature(samplesUnderThisNode, samplesLabels, thershod, thershodImpure,
     max = gains[argmax]
     if (max < thershod):
         global totalLeafCount
+        global totalLeafNum
         totalLeafCount += len(samplesLabels)
+        totalLeafNum += 1
         print('arrived leaf node with sample num ',len(samplesLabels),' with leaf count ',totalLeafCount)
         return -1
     else:

@@ -1,5 +1,6 @@
 import scipy.io as scio
 import treeNode
+from treeNode import totalLeafNum
 from treeNode import totalPruningNum
 import numpy as np
 
@@ -93,6 +94,8 @@ def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.
     bestPara = -1 #最优的参数选取
     bestAccuracy = 0 #最优的验证集准确率
     selectList = [] #挑选的超参数结果
+    global totalPruningNum
+    global totalLeafNum
     if (type == 1):
         thershodImpureList = [1e-10, 0.04, 0.10, 0.20, 0.30]  # thershodImpure调整时的取值列表
         for myThershodImpure in thershodImpureList:
@@ -105,7 +108,7 @@ def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.
             results2, accuracy2 = Decision(treeroot, validateData, validateLabel)
             print('validate set accuracy:', accuracy2)
             selectList.append([myThershodImpure, accuracy1, accuracy2, treeNode.totalLeafNum, totalPruningNum])
-            print('total leaf num:', treeNode.totalLeadNum)
+            print('total leaf num:', treeNode.totalLeafNum)
             print('total pruning num:', totalPruningNum)
             treeNode.totalLeafCount = 0  # 叶节点个数归为0
             treeNode.totalLeafNum = 0
@@ -126,7 +129,7 @@ def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.
             results2, accuracy2 = Decision(treeroot, validateData, validateLabel)
             print('validate set accuracy:', accuracy2)
             selectList.append([myMethod, accuracy1, accuracy2, treeNode.totalLeafNum, totalPruningNum])
-            print('total leaf num:',treeNode.totalLeadNum)
+            print('total leaf num:',treeNode.totalLeafNum)
             print('total pruning num:',totalPruningNum)
             treeNode.totalLeafCount = 0  # 叶节点个数归为0
             treeNode.totalLeafNum = 0
@@ -147,7 +150,7 @@ def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.
             results2, accuracy2 = Decision(treeroot, validateData, validateLabel)
             print('validate set accuracy:', accuracy2)
             selectList.append([myThershod, accuracy1, accuracy2, treeNode.totalLeafNum, totalPruningNum])
-            print('total leaf num:', treeNode.totalLeadNum)
+            print('total leaf num:', treeNode.totalLeafNum)
             print('total pruning num:', totalPruningNum)
             treeNode.totalLeafCount = 0  # 叶节点个数归为0
             treeNode.totalLeafNum = 0

@@ -83,20 +83,19 @@ def Prune(treeroot, validateData, validateLabel):
 #    参数therthod：停止分支的信息增益阈值
 #    参数therthodImpure：初始不纯度的停止分支阈值
 #    参数method：所使用的计算不纯度的方法，1为熵度量，2为错分度量，其他为Gini系数（default）
-#    return：[数组A, 最优的决策树的树根节点],A的每行是一组超参数取值的结果，第一列为超参数取值，第二列为训练集准确率，第三列为验证集准确率
+#    return：[数组A, 最优的决策树的树根节点,最优的对应参数],A的每行是一组超参数取值的结果，第一列为超参数取值，第二列为训练集准确率，第三列为验证集准确率
 def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.02, thershodImpure=0.1, method=0):
     bestTree = None #最优的决策树
+    bestPara = -1 #最优的参数选取
     bestAccuracy = 0 #最优的验证集准确率
     selectList = [] #挑选的超参数结果
-    thershodList = [1e-10, 4e-3, 0.01, 0.02, 0.05] #thershod调整时的取值列表
-
-    methodList = [0, 1, 2] #method调整时的取值列表
     if (type == 1):
         thershodImpureList = [1e-10, 0.04, 0.10, 0.20, 0.30]  # thershodImpure调整时的取值列表
         for myThershodImpure in thershodImpureList:
             print('for thershodImpure = ',myThershodImpure)
             treeroot = treeNode.treeNode()
             treeNode.GenerateTree(treeroot, trainData, trainLabel, thershod, myThershodImpure, method)
+            treeNode.totalLeafCount = 0 #叶节点个数归为0
             Prune(treeroot, validateData, validateLabel)
             results1, accuracy1 = Decision(treeroot, trainData, trainLabel)
             print('train set accuracy:', accuracy1)
@@ -106,8 +105,40 @@ def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.
             if (accuracy2 > bestAccuracy):
                 bestAccuracy = accuracy2
                 bestTree = treeroot
-
-    return [selectList, bestTree]
+                bestPara = myThershodImpure
+    elif (type == 2):
+        methodList = [0, 1, 2]  # method调整时的取值列表
+        for myMethod in methodList:
+            print('for method = ',myMethod)
+            treeroot = treeNode.treeNode()
+            treeNode.GenerateTree(treeroot, trainData, trainLabel, thershod, thershodImpure, myMethod)
+            Prune(treeroot, validateData, validateLabel)
+            results1, accuracy1 = Decision(treeroot, trainData, trainLabel)
+            print('train set accuracy:', accuracy1)
+            results2, accuracy2 = Decision(treeroot, validateData, validateLabel)
+            print('validate set accuracy:', accuracy2)
+            selectList.append([myMethod, accuracy1, accuracy2])
+            if (accuracy2 > bestAccuracy):
+                bestAccuracy = accuracy2
+                bestTree = treeroot
+                bestPara =myMethod
+    else:
+        thershodList = [1e-10, 4e-3, 0.01, 0.02, 0.05]  # thershod调整时的取值列表
+        for myThershod in thershodList:
+            print('for thershod = ',myThershod)
+            treeroot = treeNode.treeNode()
+            treeNode.GenerateTree(treeroot, trainData, trainLabel, myThershod, thershodImpure, method)
+            Prune(treeroot, validateData, validateLabel)
+            results1, accuracy1 = Decision(treeroot, trainData, trainLabel)
+            print('train set accuracy:', accuracy1)
+            results2, accuracy2 = Decision(treeroot, validateData, validateLabel)
+            print('validate set accuracy:', accuracy2)
+            selectList.append([myThershod, accuracy1, accuracy2])
+            if (accuracy2 > bestAccuracy):
+                bestAccuracy = accuracy2
+                bestTree = treeroot
+                bestPara =myThershod
+    return [selectList, bestTree,bestPara]
 
 
 
@@ -121,8 +152,9 @@ doclabel = data['doclabel']
 #划分训练集、验证集和测试集
 trainData, trainLabel, validateData, validateLabel, testData, testLabel = splitDatas(wordMat, doclabel)
 #使用训练集和验证集，得到最佳的超参数选取的决策树
-results, bestTree = main(trainData, trainLabel, validateData, validateLabel, 1)
+results, bestTree, bestPara = main(trainData, trainLabel, validateData, validateLabel, 1)
 print('results = ',results)
+print('best para = ',bestPara)
 #测试准确率情况
 results, accuracy = Decision(bestTree, trainData, trainLabel)
 print('train set accuracy:',accuracy)

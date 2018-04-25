@@ -89,7 +89,7 @@ def Prune(treeroot, validateData, validateLabel):
 #    参数method：所使用的计算不纯度的方法，1为熵度量，2为错分度量，其他为Gini系数（default）
 #    return：[数组A, 最优的决策树的树根节点,最优的对应参数],A的每行是一组超参数取值的结果，
 #             第一列为超参数取值，第二列为训练集准确率，第三列为验证集准确率,第四列为生长的叶子个数，第五列为剪枝点的个数
-def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.02, thershodImpure=0.1, method=0):
+def main(trainData, trainLabel, validateData, validateLabel, type=0, thershod=0.01, thershodImpure=0.2, method=0):
     bestTree = None #最优的决策树
     bestPara = -1 #最优的参数选取
     bestAccuracy = 0 #最优的验证集准确率
@@ -173,7 +173,7 @@ doclabel = data['doclabel']
 #划分训练集、验证集和测试集
 trainData, trainLabel, validateData, validateLabel, testData, testLabel = splitDatas(wordMat, doclabel)
 #使用训练集和验证集，得到最佳的超参数选取的决策树
-results, bestTree, bestPara = main(trainData, trainLabel, validateData, validateLabel, 0)
+results, bestTree, bestPara = main(trainData, trainLabel, validateData, validateLabel, 2)
 print('results = ',results)
 print('best para = ',bestPara)
 #测试准确率情况

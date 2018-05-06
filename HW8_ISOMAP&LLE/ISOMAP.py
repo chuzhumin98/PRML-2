@@ -18,11 +18,23 @@ def holdkNearest(distMatrix, k):
         careArray = distMatrix[i,:] #在这里所关心的距离
         topk = np.argpartition(careArray, k)[0:k+1] #这个地方需要注意，topk其实是到前k+1个结果，因为自距离为0
         manifoldDist[i,topk] = careArray[topk] #将topk的距离替换成实际距离
+        manifoldDist[topk,i] = careArray[topk]
     return manifoldDist
 
 # 从start为index进行Dijkstra扩展
 def Dijkstra(manifoldMatrix, start):
-    print(manifoldMatrix)
+    cacheDist = manifoldMatrix[start].copy() #缓存一下距离
+    cacheDist[start] = np.float32('inf') #将它本身的距离设为无穷，方便后面寻找距离最短的节点
+    for i in range(len(manifoldMatrix)-1):
+        index = np.argmin(cacheDist)
+        dist = cacheDist[index] #记录一下该距离
+        for j in range(len(manifoldMatrix)):
+            # 如果有更小的距离选项时，则更新相关的距离
+            if (manifoldMatrix[start][j] > dist + manifoldMatrix[index][j]):
+                manifoldMatrix[start][j] = dist + manifoldMatrix[index][j]
+                manifoldMatrix[j][start] = manifoldMatrix[start][j]
+                cacheDist[j] = manifoldMatrix[start][j]
+        cacheDist[index] = np.float('inf') #使用过的信息，距离归为无穷
 
 if __name__ == '__main__':
     # 在三维空间中生成形状为N的数据
@@ -42,8 +54,11 @@ if __name__ == '__main__':
     dataTmp[:, 2] = dataTmp[:, 0] * 2 - 4 + dataTmp[:, 2]*0.5
     data = np.vstack((data, dataTmp))  # 将三部分数据合并
 
-    distanceMatrix = distance(data[:10,:]) # 根据数据得到初始的距离矩阵
-    manifoldMatrix = holdkNearest(distanceMatrix, 3) #得到top-k的初始流形距离
+    distanceMatrix = distance(data[:,:]) # 根据数据得到初始的距离矩阵
+    manifoldMatrix = holdkNearest(distanceMatrix, 10) #得到top-k的初始流形距离
+    for i in range(len(manifoldMatrix)):
+        Dijkstra(manifoldMatrix,i)
+    print(manifoldMatrix)
 
     """
     print(data)

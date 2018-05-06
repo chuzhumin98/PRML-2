@@ -36,6 +36,19 @@ def Dijkstra(manifoldMatrix, start):
                 cacheDist[j] = manifoldMatrix[start][j]
         cacheDist[index] = np.float('inf') #使用过的信息，距离归为无穷
 
+# MDS实现数据降维，输入为距离矩阵(N*N)，输出为在p维中的位置N*p
+def MDS(distMatrix, p):
+    size = len(distMatrix)
+    A = np.square(distMatrix) * (-0.5) #-d^2/2
+    H = np.eye(size) - np.ones([size,size])/size #H矩阵
+    B = np.matmul(H, A)
+    B = np.matmul(B, H) #B=HAH
+    Lambda, V = np.linalg.eig(B) #对B做矩阵特征值分解
+    indexs = np.argpartition(-Lambda, p-1)[0:p] #取-Lambda最小的p个特征值，即为Lambda最大的p个
+    Lambda1 = np.diag(Lambda[indexs]) #抽取的特征值组成的矩阵
+    V1 = V[:, indexs]
+    return np.matmul(V1, np.sqrt(Lambda1)) #得到降维后的数据
+
 if __name__ == '__main__':
     # 在三维空间中生成形状为N的数据
     sizePart = 100 #一部分的点数
@@ -54,15 +67,22 @@ if __name__ == '__main__':
     dataTmp[:, 2] = dataTmp[:, 0] * 2 - 4 + dataTmp[:, 2]*0.5
     data = np.vstack((data, dataTmp))  # 将三部分数据合并
 
-    distanceMatrix = distance(data[:,:]) # 根据数据得到初始的距离矩阵
+    distanceMatrix = distance(data) # 根据数据得到初始的距离矩阵
     manifoldMatrix = holdkNearest(distanceMatrix, 10) #得到top-k的初始流形距离
     for i in range(len(manifoldMatrix)):
         Dijkstra(manifoldMatrix,i)
-    print(manifoldMatrix)
+    newData = MDS(manifoldMatrix, 2) #得到ISOMAP后的数据
 
-    """
-    print(data)
-    print(len(data))
+    plt.figure(1)
+    plt.scatter(newData[0:sizePart, 0], newData[0:sizePart, 1], c='b')
+    plt.scatter(newData[sizePart:sizePart * 2, 0], newData[sizePart:sizePart * 2, 1], c='g')
+    plt.scatter(newData[sizePart * 2:sizePart * 3, 0], newData[sizePart * 2:sizePart * 3, 1], c='r')
+    plt.xlabel('new feature 1')
+    plt.ylabel('new feature 2')
+    plt.title('data distribution after ISOMAP')
+    plt.savefig('isomapdata1.png', dpi=150)
+
+    plt.figure(2)
     ax = plt.subplot(111, projection='3d')  # 创建一个三维的绘图工程
     ax.scatter(data[0:sizePart,0], data[0:sizePart,1], data[0:sizePart,2], c='b')  # 绘制数据点
     ax.scatter(data[sizePart:sizePart*2, 0], data[sizePart:sizePart*2, 1], data[sizePart:sizePart*2, 2], c='g')  # 绘制数据点
@@ -73,4 +93,3 @@ if __name__ == '__main__':
     plt.title('initial data distribution')
     #plt.show()
     plt.savefig('data1.png',dpi=150)
-    """

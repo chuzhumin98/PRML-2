@@ -2,6 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+# 导入一个N*k的位置矩阵，返回一个N*N的距离矩阵
+def distance(data):
+    size = len(data)
+    distMatrix = np.zeros([size,size],dtype=np.float32) #初始化距离矩阵
+    for i in range(size):
+        distMatrix[i,:] = np.sum(np.square(np.tile(data[i, :], [size, 1]) - data), axis=1)
+    print(distMatrix)
+
 if __name__ == '__main__':
     # 在三维空间中生成形状为N的数据
     sizePart = 100 #一部分的点数
@@ -20,6 +28,9 @@ if __name__ == '__main__':
     dataTmp[:, 2] = dataTmp[:, 0] * 2 - 4 + dataTmp[:, 2]*0.5
     data = np.vstack((data, dataTmp))  # 将三部分数据合并
 
+    distance(data[:10,:])
+
+    """
     print(data)
     print(len(data))
     ax = plt.subplot(111, projection='3d')  # 创建一个三维的绘图工程
@@ -32,3 +43,4 @@ if __name__ == '__main__':
     plt.title('initial data distribution')
     #plt.show()
     plt.savefig('data1.png',dpi=150)
+    """

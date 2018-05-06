@@ -7,7 +7,7 @@ def distance(data):
     size = len(data)
     distMatrix = np.zeros([size,size],dtype=np.float32) #初始化距离矩阵
     for i in range(size):
-        distMatrix[i,:] = np.sum(np.square(np.tile(data[i, :], [size, 1]) - data), axis=1)
+        distMatrix[i,:] = np.sqrt(np.sum(np.square(np.tile(data[i, :], [size, 1]) - data), axis=1))
     return distMatrix
 
 # 只保留前k近邻的距离，其他均化为无穷——流形距离

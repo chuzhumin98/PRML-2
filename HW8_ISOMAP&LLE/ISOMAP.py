@@ -8,7 +8,21 @@ def distance(data):
     distMatrix = np.zeros([size,size],dtype=np.float32) #初始化距离矩阵
     for i in range(size):
         distMatrix[i,:] = np.sum(np.square(np.tile(data[i, :], [size, 1]) - data), axis=1)
-    print(distMatrix)
+    return distMatrix
+
+# 只保留前k近邻的距离，其他均化为无穷——流形距离
+def holdkNearest(distMatrix, k):
+    size = len(distMatrix)
+    manifoldDist = np.ones([size, size], np.float32)*np.float('inf') #流形距离
+    for i in range(size):
+        careArray = distMatrix[i,:] #在这里所关心的距离
+        topk = np.argpartition(careArray, k)[0:k+1] #这个地方需要注意，topk其实是到前k+1个结果，因为自距离为0
+        manifoldDist[i,topk] = careArray[topk] #将topk的距离替换成实际距离
+    return manifoldDist
+
+# 从start为index进行Dijkstra扩展
+def Dijkstra(manifoldMatrix, start):
+    print(manifoldMatrix)
 
 if __name__ == '__main__':
     # 在三维空间中生成形状为N的数据
@@ -28,7 +42,8 @@ if __name__ == '__main__':
     dataTmp[:, 2] = dataTmp[:, 0] * 2 - 4 + dataTmp[:, 2]*0.5
     data = np.vstack((data, dataTmp))  # 将三部分数据合并
 
-    distance(data[:10,:])
+    distanceMatrix = distance(data[:10,:]) # 根据数据得到初始的距离矩阵
+    manifoldMatrix = holdkNearest(distanceMatrix, 3) #得到top-k的初始流形距离
 
     """
     print(data)

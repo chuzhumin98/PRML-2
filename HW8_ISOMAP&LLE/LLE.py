@@ -22,13 +22,16 @@ def calculateWeightMatrix(data, k):
 
 # 在d维空间中去最小化M矩阵的误差
 def minimizeCost(M, d):
-    print(M)
     Lambda, V = np.linalg.eig(M)  # 对M做矩阵特征值分解
     print(Lambda)
+    indexs = np.argpartition(np.abs(Lambda),d)[0:d+1] #所使用的index
+    Vused = V[:,indexs]
+    Vused = np.real(Vused) #取出虚部部分
+    return Vused
 
 if __name__ == '__main__':
     # 设计实验数据，形状类似于"3"
-    sizePart = 200 #一部分的样本点个数
+    sizePart = 300 #一部分的样本点个数
     data = np.zeros([sizePart*2, 3], np.float64) #最后生成的数据
     # 第一部分：(Rsin\theta, y, Rcos\theta+2),1.5<R<2,0<y<1,0<\theta<pi
     paras = np.random.random((sizePart,3)) #各列分别是R,\theta,y
@@ -42,10 +45,18 @@ if __name__ == '__main__':
     data[sizePart:sizePart*2, 2] = (paras[:, 0] * 0.5 + 1.5) * np.cos(paras[:, 1] * np.pi) - 2
     # LLE主干代码
     W = calculateWeightMatrix(data, 20) #得到k近邻下的权值矩阵
-    M = np.matmul(np.transpose(np.eye(len(W))-W), np.eye(len(W))-W)
-    minimizeCost(M,2)
+    deltaW = np.eye(len(W))-W
+    M = np.matmul(np.conjugate(np.transpose(deltaW)), deltaW)
+    newData = minimizeCost(M,2)
 
-    """
+    plt.figure(1)
+    plt.scatter(newData[0:sizePart, 0], newData[0:sizePart, 1], c='b')
+    plt.scatter(newData[sizePart:sizePart * 2, 0], newData[sizePart:sizePart * 2, 1], c='r')
+    plt.xlabel('new feature 1')
+    plt.ylabel('new feature 2')
+    plt.title('data distribution after LLE')
+    plt.savefig('LLE1.png', dpi=150)
+
     plt.figure(2)
     ax = plt.subplot(111, projection='3d')  # 创建一个三维的绘图工程
     ax.scatter(data[0:sizePart, 0], data[0:sizePart, 1], data[0:sizePart, 2], c='b')  # 绘制数据点
@@ -55,4 +66,3 @@ if __name__ == '__main__':
     ax.set_xlabel('X')
     plt.title('initial data distribution')
     plt.savefig('data2.png', dpi=150)
-    """
